@@ -2,6 +2,8 @@ version: "3.8"
 
 volumes:
   mysql_data:
+  build_folder:
+
 
 services:
   mysqldb:
@@ -31,3 +33,23 @@ services:
       - mysqldb
 
 
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend/:/frontend
+      - build_folder:/frontend/build
+    tty: true
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    command: [ "yarn", "start" ]
+    ports:
+      - 80:3000
+    volumes:
+      - ./frontend/:/frontend
+    tty: true
