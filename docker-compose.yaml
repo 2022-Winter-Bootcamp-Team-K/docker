@@ -33,15 +33,7 @@ services:
       - mysqldb
 
 
-  frontend:
-    container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./frontend/:/frontend
-      - build_folder:/frontend/build
-    tty: true
+
 
   frontend:
     build:
