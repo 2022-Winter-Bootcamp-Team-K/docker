@@ -33,8 +33,6 @@ services:
       - mysqldb
 
 
-
-
   frontend:
     build:
       context: ./frontend
@@ -45,3 +43,15 @@ services:
     volumes:
       - ./frontend/:/frontend
     tty: true
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:8080
+    # volumes:
+    #   - static_volume:/backend/staticfiles
+    #   - media_volume:/backend/mediafiles
+    #   - build_folder:/var/www/frontend
+    depends_on:
+      - backend
+      - frontend
