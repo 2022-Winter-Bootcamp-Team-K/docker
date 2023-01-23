@@ -1,0 +1,86 @@
+#배포용, for production
+version: "3.8"
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+  build_folder:
+
+
+services:
+  mysqldb:
+    build: ./backend/db
+    env_file:
+      - "./backend/db/db.env"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:3306"]
+      interval: 10s
+      timeout: 15s #체크하는데 15초 이상 걸리면 체크 실패했다고 판단
+      retries: 5 #실패를 5번까지 체크해서 다 실패하면 unhealty판단
+      start_period: 10s 
+
+  backend:
+    build: ./backend/backend
+    command: >
+      bash -c "python wait_mysql.py &&
+               python manage.py makemigrations &&
+               python manage.py migrate &&
+               python manage.py loaddata fixture.json &&
+               gunicorn backend.wsgi:application --bind 0.0.0.0:8080" &&
+               
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/backend:/app
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - 'redisdata:/data'
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - build_folder:/var/www/frontend
+    depends_on:
+      - backend
+      - frontend
+  
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:latest #아마 될거야
+    environment:
+      - RABBITMQ_USER=guest
+      - RABITMQ_PASSWORD=guset #막막하네
+    ports:
+      - "5672:5672" #rabbitMQ default port
+      - "15672:15672" #UI를 위한 port 이건 뭐지?
+    expose: #이건 뭐더라?
+      - "15672"
+
+      
+  celery_worker:
+    container_name: celery_worker
+    build:
+       context: ./backend/backend 
+    ports: [] 
+    depends_on:
+       mysqldb: 
+           condition: service_healthy
+    command: sh -c "celery -A backend worker --loglevel=info"
+    tty: true
