@@ -4,3 +4,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/2022-Winter-Bootcamp-Team-K/frontend.git
+[submodule "elk"]
+	path = elk
+	url = https://github.com/0BVer/logging-example.git
