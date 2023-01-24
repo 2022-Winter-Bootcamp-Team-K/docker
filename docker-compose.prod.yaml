@@ -54,13 +54,23 @@ services:
   nginx:
     build: ./nginx
     ports:
-      - "80:80"
+      - "80:3000"
     volumes:
       - build_folder:/var/www/frontend
     depends_on:
       - backend
       - frontend
-  
+
+  client:
+    container_name: client
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./frontend/:/frontend
+      - build_folder:/frontend/build
+    tty: true
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:latest #아마 될거야
