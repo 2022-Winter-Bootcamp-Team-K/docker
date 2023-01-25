@@ -19,12 +19,12 @@ services:
       - '3307:3306'
     volumes:
       - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3306']
-      interval: 10s
-      timeout: 15s #체크하는데 15초 이상 걸리면 체크 실패했다고 판단
-      retries: 5 #실패를 5번까지 체크해서 다 실패하면 unhealty판단
-      start_period: 10s
+    # healthcheck:
+    #   test: ['CMD', 'curl', '-f', 'http://localhost:3306']
+    #   interval: 10s
+    #   timeout: 15s #체크하는데 15초 이상 걸리면 체크 실패했다고 판단
+    #   retries: 5 #실패를 5번까지 체크해서 다 실패하면 unhealty판단
+    #   start_period: 10s
 
   backend:
     build: ./backend/backend
@@ -33,7 +33,7 @@ services:
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py loaddata fixture.json &&
-               gunicorn backend.wsgi:application --bind 0.0.0.0:8080" &&
+               gunicorn backend.wsgi --bind 0.0.0.0:8080" &&
 
     ports:
       - '8080:8080'
@@ -94,10 +94,11 @@ services:
       context: ./backend/backend
     ports: []
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
+        # condition: service_healthy
     command: sh -c "celery -A backend worker --loglevel=info"
     tty: true
+    restart: always
 
   prometheus:
     container_name: prometheus
