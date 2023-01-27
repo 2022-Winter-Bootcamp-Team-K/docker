@@ -22,7 +22,4 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           port: ${{ secrets.PORT }}
           script: |
-            cd server
-            git reset --hard
-            git fetch
-            git pull
+            echo "테스트 출력"
