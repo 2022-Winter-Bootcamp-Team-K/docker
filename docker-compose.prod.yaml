@@ -47,7 +47,7 @@ services:
       - 8080
 
   redis:
-    container_name: redis
+    container_name: redis_contain
     image: redis:latest
     hostname: redis
     ports:
