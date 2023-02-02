@@ -4,7 +4,7 @@
 <image width=25%, height=25%, src="https://user-images.githubusercontent.com/87285536/215344050-6453724d-777d-47b9-bae2-e7a312d341a7.png">
 
 ***ROLL IT!***
-<br>큰 종이의 한편에 당신의 마음을 전달해보세요
+<br>큰 종이 한편에 당신의 마음을 전달해보세요
 ###  URL: [www.rollit5.link](http://www.rollit5.link)
 ### Medium: [Medium](https://medium.com/@say004972/roll-it-online-rolling-paper-service-b2b4e23a47b8)
 </div>
@@ -138,7 +138,7 @@ Kibana | 5061 | Elasticsearch에 저장된 로그를 Kibana를 통해 분석합�
 
 ## 🚀  How to Start
 ```
-$ git clone --recursive https://github.com/2022-Winter-Bootcamp-Team-K/docker.git
+$ git clone --recursive https://github.com/SVTeamK-ROLLIT/docker.git
 $ cd fronted
 $ yarn 
 ```
